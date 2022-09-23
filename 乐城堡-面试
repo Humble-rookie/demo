@@ -1,0 +1,69 @@
+一、
+import re
+import time
+import glob
+import linecache
+
+
+ip = r"?P<ip>[\d.]*"
+date = r"?P<date>\d+"
+month = r"?P<month>\w+"
+year = r"?P<year>\d+"
+day_time = r"?P<day_time>\S+"
+method = r"?P<method>\S+"
+request = r"?P<request>\S+"
+status = r"?P<status>\d+"
+body_bytes = r"?P<body_bytes>\d+"
+
+def parse_log(log_line):
+    log_fmt = r"(%s)\ - \ -\ \[(%s)/(%s)/(%s)\:(%s)\ [\S]+\]\ \"(%s)?[\s]?(%s)?.*?\"\ (%s)\ (%s)\s"
+    p = re.compile(log_fmt %(ip, date, month, year, day_time, method, request, status, body_bytes), 
+    re.VERBOSE)
+    return re.search(p, log_line)
+
+if __name__ == '__main__':
+    time_file = open("time.log", "a")    
+
+    log_path = glob.glob("./nginx.log")[0]
+    request_all = 0 
+    request_success = 0
+    request_domain = 0 
+    for line in linecache.getlines(log_path):
+        matches = parse_log(line)
+        date = matches.group("date")
+        request = matches.group("request")
+        status = matches.group("status")
+        if status domain1.com 
+           request_domain = request_domain + 1  
+        if date 28
+           request_success = request_success + 1
+    request_all = request_all + 1
+print("request_domain:"request_domain)
+print("request_all:"request_all)
+print("request_success:"request_success)
+
+二、
+select  user_id,
+        count(*) as login_times
+from    (
+            select 
+                    user_id,
+                    from_unixtime(event_timestamp,'yyyy-MM-dd') as date 
+            from    event_log
+            where   event_timestamp >= unix_timestamp('2020-09-01 00:00:00')
+)t1    
+having count(*) >= 1000 and count(*) < 2000
+
+
+三、
+dim_club(bigint,string,string,string,partition) 
+club_id,adress,name,others,p_date
+
+dim_player(bigint,string,string,string,bigint,bigint,string,string,string,partition) 
+player_id,player_name,adress,rank,club_id,others,begin_time,end_time,p_date
+
+dwd_bhv_match_di(bigint,bigint,bigint,string,string,string,partition) 
+match_id,player_id,tournament_id,is_win,begin_time,end_time,p_date
+
+dwd_bhv_tournament_di(bigint,string,string,array<string>,string,string,partition) 
+tournament_id,name,club_id,sponsors_names,begin_time,end_time,p_date
